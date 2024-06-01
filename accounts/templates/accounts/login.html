@@ -1,6 +1,6 @@
 <!-- @format -->
 
-{% extends "core/base.html" %} {% block head_title %} Register {% endblock %} {% block body %}
+{% extends "core/base.html" %} {% block head_title %} Login {% endblock %} {% block body %}
 <section>
   {% if form.non_field_errors %} {% for error in form.non_field_errors %}
   <div role="alert" class="alert alert-error">
@@ -21,7 +21,7 @@
   </div>
   {% endfor %} {% endif %}
   <div class="px-3 py-4 my-6">
-    <h1 class="font-bold text-3xl text-center pb-5">Register</h1>
+    <h1 class="font-bold text-3xl text-center pb-5">Login</h1>
     <div class="w-full mt-10 flex justify-center">
       <form novalidate method="post" class="w-2/5">
         {% csrf_token %} {% for hf in form.hidden_fields %} {{hf.errors}} {{hf}}

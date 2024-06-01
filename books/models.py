@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Book(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    categories = models.ManyToManyField(Category)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name='books', default=False)
     price = models.DecimalField(max_digits=12, decimal_places=0)
     image = models.ImageField(upload_to='books/media/uploads/', null=True, blank=True)
     

@@ -27,7 +27,7 @@
         <li><a>Item 3</a></li>
       </ul>
     </div>
-    <a class="btn btn-ghost text-xl">BOOK OASIS</a>
+    <a href='{% url "home" %}' class="btn btn-ghost text-xl">BOOK OASIS</a>
   </div>
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
@@ -35,8 +35,18 @@
       <li><a>Item 3</a></li>
     </ul>
   </div>
+  {% if user.is_authenticated %}
   <div class="navbar-end flex gap-2">
-    <a class="btn">Login</a>
-    <a class="btn">Register</a>
+    <a href='{% url "profile" %}' class="btn">Profile</a>
+    <form action='{% url "logout" %}' method='post'>
+      {% csrf_token %}
+    <button type="submit" class='btn'>Logout</button>
+    </form>
   </div>
+  {% else %}
+  <div class="navbar-end flex gap-2">
+    <a href='{% url "login" %}' class="btn">Login</a>
+    <a href='{% url "register" %}' class="btn">Register</a>
+  </div>
+  {% endif %}
 </nav>
