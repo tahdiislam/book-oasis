@@ -12,3 +12,12 @@ class Book(models.Model):
     
     def __str__(self) -> str:
         return self.title
+
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'Comment by {self.user.first_name} {self.user.last_login}'
