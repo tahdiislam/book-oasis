@@ -9,6 +9,7 @@ class Book(models.Model):
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name='books', default=False)
     price = models.DecimalField(max_digits=12, decimal_places=0)
     image = models.ImageField(upload_to='books/media/uploads/', null=True, blank=True)
+    quantity = models.IntegerField(default=0)
     
     def __str__(self) -> str:
         return self.title
@@ -20,4 +21,4 @@ class Review(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f'Comment by {self.user.first_name} {self.user.last_login}'
+        return f'Comment by {self.user.first_name} {self.user.last_name}'

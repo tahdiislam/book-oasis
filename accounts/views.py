@@ -30,3 +30,5 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('login')
+
+class DepositMoney()
