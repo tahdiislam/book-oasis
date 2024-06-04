@@ -36,6 +36,7 @@ class UserRegisterForm(UserCreationForm):
             })
 
 class DepositMoneyForm(forms.ModelForm):
+    balance = forms.DecimalField()
     class Meta:
         model = Account
         fields = ['balance']
@@ -50,9 +51,16 @@ class DepositMoneyForm(forms.ModelForm):
         return balance
     
     def __init__(self, *args, **kwargs):
+        self.user_account = kwargs.pop('account')
         super().__init__(*args, **kwargs)
 
         for field in self.fields:
             self.fields[field].widget.attrs.update({
                 'class': ('grow')
             })
+    def save(self, commit=True) -> Any:
+        account = self.user_account
+        if commit == True:
+            balance = self.cleaned_data.get('balance')
+            print('hello hello ================', balance)
+            Account.objects.filter(pk=account.id).update(balance = account.balance + balance)

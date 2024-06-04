@@ -14,11 +14,20 @@
           revisit classics. Download today and unlock a universe of literary
           adventures, wherever you go.
         </p>
-        <button class="btn btn-primary">Get Started</button>
+        <a href='{% url "profile" %}' class="btn btn-primary">Get Started</a>
       </div>
     </div>
   </div>
-  <h1 class="text-3xl font-bold flex justify-start gap-2 items-center">
+  <div class="stats bg-primary text-primary-content flex justify-center">
+  
+    <div class="center my-2">
+      <div class="stat-title">Create account</div>
+      <div class="stat-value">GET $500</div>
+      <div class="stat-title">In You account</div>
+    </div>
+    
+  </div>
+  <h1 class="p-4 text-3xl font-bold flex justify-start gap-2 items-center">
     Total Books: <kbd class="kbd kbd-md">{{books|length}}</kbd>
   </h1>
   <div class="grid grid-cols-6">

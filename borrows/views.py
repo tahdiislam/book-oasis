@@ -18,6 +18,7 @@ def borrow_book(request, id):
               book.save(update_fields=['quantity'])
               Account.objects.filter(user=request.user).update(balance=request.user.account.balance - book.price)
               Borrow.objects.create(user=request.user, book=book, balance_after_borrow=request.user.account.balance)
+              send_email(request.user, 'Borrowed Book', 'borrows/borrow_mail.html', {'title': book.title})
               messages.success(request, f"You have successfully Borrowed '{book.title}'")
               return redirect('book_details', book.id)
            else:
@@ -40,6 +41,7 @@ def return_book(request, id):
                 book.save(update_fields=['quantity'])
                 Account.objects.filter(user=request.user).update(balance=request.user.account.balance + book.price)
                 Borrow.objects.filter(pk=id).update(is_returned=True)
+                send_email(request.user, 'Return Book', 'borrows/return_mail.html', {'title': book.title})
                 messages.success(request, f"You have successfully returned '{book.title}'")
                 return redirect('profile')
     else:
