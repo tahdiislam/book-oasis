@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .forms import UserRegisterForm
-from django.views.generic import FormView, View, TemplateView
+from .forms import UserRegisterForm, DepositMoneyForm
+from django.views.generic import FormView, TemplateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
+from .models import Account
+from borrows.models import Borrow
 
 # Create your views here.
 class UserRegisterView(FormView):
@@ -21,6 +23,13 @@ class UserRegisterView(FormView):
 class UserProfileView(TemplateView):
     template_name = 'accounts/profile.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        borrow_list = Borrow.objects.filter(user=self.request.user)
+        context["borrow_list"] = borrow_list
+        return context
+    
+
 class UserLoginView(LoginView):
     template_name = 'accounts/login.html'
 
@@ -31,4 +40,14 @@ class UserLoginView(LoginView):
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('login')
 
-class DepositMoney()
+class DepositMoneyView(CreateView):
+    form_class = DepositMoneyForm
+    model = Account
+    template_name = 'accounts/deposit.html'
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        balance = form.cleaned_data.get('balance')
+        # Account.objects.filter(user=self.request.user).update(balance=self.request.user.account.balance + balance)
+        messages.success(self.request, f'{balance} has been successfully deposit to your account')
+        return super().form_valid(form)

@@ -5,6 +5,7 @@ from .models import Borrow
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from accounts.models import Account
+from core.views import send_email
 
 # Create your views here.
 @login_required
@@ -28,3 +29,19 @@ def borrow_book(request, id):
     else:
         messages.warning(request, 'Something is wrong, please try again')
         return redirect('home')
+
+def return_book(request, id):
+    if request.method == 'POST':
+        borrow  = get_object_or_404(Borrow, pk=id)
+        if borrow:
+            book = get_object_or_404(Book, pk=borrow.book.id)
+            if book:
+                book.quantity += 1
+                book.save(update_fields=['quantity'])
+                Account.objects.filter(user=request.user).update(balance=request.user.account.balance + book.price)
+                Borrow.objects.filter(pk=id).update(is_returned=True)
+                messages.success(request, f"You have successfully returned '{book.title}'")
+                return redirect('profile')
+    else:
+        messages.warning(request, 'Something is wrong, please try again')
+        return redirect('profile')

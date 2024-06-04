@@ -16,15 +16,15 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'birth_day']
 
     def save(self, commit=True) -> Any:
-        our_user = super().save(commit=False)
+        our_user = super().save(commit=False)  # Save user first
         if commit == True:
             our_user.save()
             birth_day = self.cleaned_data.get('birth_day')
             Account.objects.create(
-                user = our_user,
-                birth_day = birth_day
+                user=self.instance,  # Use the saved user instance
+                birth_day=birth_day
             )
-        return our_user
+            return our_user
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
@@ -33,4 +33,26 @@ class UserRegisterForm(UserCreationForm):
                 'class': (
                     'grow'
                 )
+            })
+
+class DepositMoneyForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['balance']
+
+    def clean_balance(self):
+        balance = self.cleaned_data.get('balance')
+        MIN_DEPOSIT_AMOUNT = 100
+        if balance < MIN_DEPOSIT_AMOUNT:
+            raise forms.ValidationError(
+                f'You need to deposit at least {MIN_DEPOSIT_AMOUNT}'
+            )
+        return balance
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': ('grow')
             })
